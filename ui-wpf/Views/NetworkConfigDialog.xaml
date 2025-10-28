@@ -1,0 +1,76 @@
+<Window x:Class="MigracaoAD.UI.Views.NetworkConfigDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Configuração de Rede - Servidor Nuvem" Height="500" Width="600"
+        WindowStartupLocation="CenterOwner" Background="{DynamicResource AppBg}">
+  <Grid Margin="16">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
+
+    <TextBlock Text="Configuração de Rede do Servidor Nuvem" FontSize="18" FontWeight="Bold"/>
+
+    <ScrollViewer Grid.Row="1" Margin="0,16,0,0" VerticalScrollBarVisibility="Auto">
+      <StackPanel>
+        <!-- Configurar Rede -->
+        <CheckBox x:Name="ConfigureNetworkCheck" Content="Configurar IP estático e DNS" IsChecked="True" FontWeight="Bold"/>
+        <StackPanel x:Name="NetworkPanel" Margin="20,8,0,0">
+          <TextBlock Text="IP Address:" Margin="0,0,0,4"/>
+          <TextBox x:Name="IPAddressBox"/>
+          <TextBlock Text="Ex: 10.0.0.20" FontSize="10" Foreground="Gray" Margin="0,2,0,8"/>
+
+          <TextBlock Text="Prefix Length (máscara):" Margin="0,0,0,4"/>
+          <TextBox x:Name="PrefixLengthBox" Text="24"/>
+          <TextBlock Text="24 = 255.255.255.0, 16 = 255.255.0.0" FontSize="10" Foreground="Gray" Margin="0,2,0,8"/>
+
+          <TextBlock Text="Gateway:" Margin="0,0,0,4"/>
+          <TextBox x:Name="GatewayBox"/>
+          <TextBlock Text="Ex: 10.0.0.1 (deixe vazio se não houver)" FontSize="10" Foreground="Gray" Margin="0,2,0,8"/>
+
+          <TextBlock Text="DNS Server:" Margin="0,0,0,4"/>
+          <TextBox x:Name="DNSServerBox"/>
+          <TextBlock Text="Ex: 192.168.1.10 (IP do DC local)" FontSize="10" Foreground="Gray" Margin="0,2,0,8"/>
+        </StackPanel>
+
+        <!-- Preparar Disco -->
+        <CheckBox x:Name="PrepareDiskCheck" Content="Preparar disco para shares" IsChecked="False" FontWeight="Bold" Margin="0,16,0,0"/>
+        <StackPanel x:Name="DiskPanel" Margin="20,8,0,0">
+          <TextBlock Text="Número do Disco:" Margin="0,0,0,4"/>
+          <TextBox x:Name="DiskNumberBox" Text="1"/>
+          <TextBlock Text="Use 'Get-Disk' no PowerShell para ver os discos disponíveis" FontSize="10" Foreground="Gray" Margin="0,2,0,8"/>
+
+          <TextBlock Text="Letra da Unidade:" Margin="0,0,0,4"/>
+          <TextBox x:Name="DriveLetterBox" Text="E" MaxLength="1"/>
+          <TextBlock Text="Letra para o volume de shares (ex: E)" FontSize="10" Foreground="Gray" Margin="0,2,0,8"/>
+        </StackPanel>
+
+        <!-- Aviso -->
+        <Border Background="#2A1A1A" Padding="12" Margin="0,16,0,0" CornerRadius="4" BorderBrush="Orange" BorderThickness="1">
+          <StackPanel>
+            <TextBlock Text="⚠️ ATENÇÃO" FontWeight="Bold" Foreground="Orange"/>
+            <TextBlock TextWrapping="Wrap" Margin="0,4,0,0" FontSize="11" Foreground="Gray">
+              • A configuração de IP estático pode desconectar o servidor temporariamente.
+            </TextBlock>
+            <TextBlock TextWrapping="Wrap" Margin="0,2,0,0" FontSize="11" Foreground="Gray">
+              • Certifique-se de que o IP informado está correto e não está em uso.
+            </TextBlock>
+            <TextBlock TextWrapping="Wrap" Margin="0,2,0,0" FontSize="11" Foreground="Gray">
+              • O DNS deve apontar para o DC local para permitir a promoção a DC.
+            </TextBlock>
+            <TextBlock TextWrapping="Wrap" Margin="0,2,0,0" FontSize="11" Foreground="Gray">
+              • A preparação de disco irá FORMATAR o disco selecionado (todos os dados serão perdidos).
+            </TextBlock>
+          </StackPanel>
+        </Border>
+      </StackPanel>
+    </ScrollViewer>
+
+    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+      <Button Content="Cancelar" Padding="12,6" Click="Cancel_Click" Margin="0,0,8,0"/>
+      <Button Content="Configurar" Padding="12,6" Click="OK_Click" IsDefault="True"/>
+    </StackPanel>
+  </Grid>
+</Window>
+

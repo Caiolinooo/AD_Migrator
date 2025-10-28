@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <?define ProductVersion="1.0.0" ?>
+  <?define ProductName="AD Migration Suite" ?>
+  <?define Manufacturer="AD Migration Suite Team" ?>
+  <?define UpgradeCode="12345678-1234-1234-1234-123456789012" ?>
+  
+  <Product Id="*" 
+           Name="$(var.ProductName)" 
+           Language="1033" 
+           Version="$(var.ProductVersion)" 
+           Manufacturer="$(var.Manufacturer)" 
+           UpgradeCode="$(var.UpgradeCode)">
+    
+    <Package InstallerVersion="500" 
+             Compressed="yes" 
+             InstallScope="perMachine" 
+             Description="$(var.ProductName) - Enterprise Active Directory Migration Solution"
+             Comments="Professional AD Migration Tool"
+             Manufacturer="$(var.Manufacturer)" />
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <!-- Custom UI -->
+    <UIRef Id="WixUI_FeatureTree" />
+    <UIRef Id="WixUI_ErrorProgressText" />
+    
+    <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+    <WixVariable Id="WixUIBannerBmp" Value="Banner.bmp" />
+    <WixVariable Id="WixUIDialogBmp" Value="Dialog.bmp" />
+
+    <!-- Properties -->
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+    <Property Id="AGENT_TOKEN" Value="default-token-change-me" />
+    <Property Id="AGENT_PORT" Value="8765" />
+    <Property Id="LAUNCH_MANAGER" Value="1" />
+    
+    <!-- Custom Actions -->
+    <CustomAction Id="LaunchManager" 
+                  FileKey="MigracaoAD.UI.exe" 
+                  ExeCommand="" 
+                  Execute="immediate" 
+                  Impersonate="yes" 
+                  Return="asyncNoWait" />
+    
+    <CustomAction Id="InstallAgentService"
+                  Directory="INSTALLFOLDER"
+                  ExeCommand="[INSTALLFOLDER]MigracaoAD.Agent.exe install"
+                  Execute="deferred"
+                  Impersonate="no"
+                  Return="check" />
+    
+    <CustomAction Id="StartAgentService"
+                  Directory="INSTALLFOLDER"
+                  ExeCommand="[INSTALLFOLDER]MigracaoAD.Agent.exe start"
+                  Execute="deferred"
+                  Impersonate="no"
+                  Return="check" />
+    
+    <CustomAction Id="StopAgentService"
+                  Directory="INSTALLFOLDER"
+                  ExeCommand="[INSTALLFOLDER]MigracaoAD.Agent.exe stop"
+                  Execute="deferred"
+                  Impersonate="no"
+                  Return="ignore" />
+    
+    <CustomAction Id="UninstallAgentService"
+                  Directory="INSTALLFOLDER"
+                  ExeCommand="[INSTALLFOLDER]MigracaoAD.Agent.exe uninstall"
+                  Execute="deferred"
+                  Impersonate="no"
+                  Return="ignore" />
+
+    <CustomAction Id="SetAgentToken"
+                  Property="AGENT_TOKEN_ENV"
+                  Value="[AGENT_TOKEN]"
+                  Execute="immediate" />
+    
+    <CustomAction Id="ConfigureFirewall"
+                  Directory="INSTALLFOLDER"
+                  ExeCommand='powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "New-NetFirewallRule -DisplayName \"AD Migration Agent\" -Direction Inbound -Protocol TCP -LocalPort [AGENT_PORT] -Action Allow -ErrorAction SilentlyContinue"'
+                  Execute="deferred"
+                  Impersonate="no"
+                  Return="ignore" />
+
+    <!-- Install Sequences -->
+    <InstallExecuteSequence>
+      <Custom Action="SetAgentToken" Before="InstallFiles">AGENT_FEATURE=3</Custom>
+      <Custom Action="ConfigureFirewall" After="InstallFiles">AGENT_FEATURE=3</Custom>
+      <Custom Action="InstallAgentService" After="ConfigureFirewall">AGENT_FEATURE=3</Custom>
+      <Custom Action="StartAgentService" After="InstallAgentService">AGENT_FEATURE=3</Custom>
+      <Custom Action="StopAgentService" Before="RemoveFiles">AGENT_FEATURE=2 AND REMOVE="ALL"</Custom>
+      <Custom Action="UninstallAgentService" After="StopAgentService">AGENT_FEATURE=2 AND REMOVE="ALL"</Custom>
+    </InstallExecuteSequence>
+
+    <InstallUISequence>
+      <Custom Action="LaunchManager" After="InstallFinalize">MANAGER_FEATURE=3 AND LAUNCH_MANAGER="1" AND NOT Installed</Custom>
+    </InstallUISequence>
+
+    <!-- Directory Structure -->
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFiles64Folder">
+        <Directory Id="INSTALLFOLDER" Name="AD Migration Suite">
+          <Directory Id="MANAGER_DIR" Name="Manager" />
+          <Directory Id="AGENT_DIR" Name="Agent" />
+          <Directory Id="DOCS_DIR" Name="Documentation" />
+        </Directory>
+      </Directory>
+      
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="ApplicationProgramsFolder" Name="AD Migration Suite" />
+      </Directory>
+      
+      <Directory Id="DesktopFolder" Name="Desktop" />
+    </Directory>
+
+    <!-- Features -->
+    <Feature Id="ProductFeature" 
+             Title="AD Migration Suite" 
+             Level="1" 
+             Display="expand"
+             ConfigurableDirectory="INSTALLFOLDER">
+      
+      <!-- Manager Feature -->
+      <Feature Id="MANAGER_FEATURE" 
+               Title="Management Console" 
+               Level="1"
+               Description="WPF application for managing AD migrations. Install this on your management workstation.">
+        <ComponentGroupRef Id="ManagerComponents" />
+        <ComponentGroupRef Id="ManagerShortcuts" />
+      </Feature>
+      
+      <!-- Agent Feature -->
+      <Feature Id="AGENT_FEATURE" 
+               Title="Agent Service" 
+               Level="1"
+               Description="Windows Service agent for remote management. Install this on source and target servers.">
+        <ComponentGroupRef Id="AgentComponents" />
+      </Feature>
+      
+      <!-- Documentation Feature -->
+      <Feature Id="DOCS_FEATURE" 
+               Title="Documentation" 
+               Level="1"
+               Description="User guides, API documentation, and installation instructions.">
+        <ComponentGroupRef Id="DocumentationComponents" />
+      </Feature>
+    </Feature>
+
+    <!-- Manager Components -->
+    <ComponentGroup Id="ManagerComponents" Directory="MANAGER_DIR">
+      <Component Id="ManagerExe" Guid="*">
+        <File Id="MigracaoAD.UI.exe" 
+              Source="..\ui-wpf\bin\Release\net8.0-windows\MigracaoAD.UI.exe" 
+              KeyPath="yes" />
+      </Component>
+      <Component Id="ManagerDll" Guid="*">
+        <File Id="MigracaoAD.UI.dll" 
+              Source="..\ui-wpf\bin\Release\net8.0-windows\MigracaoAD.UI.dll" 
+              KeyPath="yes" />
+      </Component>
+      <Component Id="ManagerConfig" Guid="*">
+        <File Id="MigracaoAD.UI.dll.config" 
+              Source="..\ui-wpf\bin\Release\net8.0-windows\MigracaoAD.UI.dll.config" 
+              KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- Manager Shortcuts -->
+    <ComponentGroup Id="ManagerShortcuts">
+      <Component Id="ApplicationShortcut" Directory="ApplicationProgramsFolder" Guid="*">
+        <Shortcut Id="ApplicationStartMenuShortcut"
+                  Name="AD Migration Suite"
+                  Description="Enterprise Active Directory Migration Tool"
+                  Target="[MANAGER_DIR]MigracaoAD.UI.exe"
+                  WorkingDirectory="MANAGER_DIR"
+                  Icon="AppIcon.exe" />
+        <RemoveFolder Id="CleanUpShortCut" Directory="ApplicationProgramsFolder" On="uninstall" />
+        <RegistryValue Root="HKCU" 
+                       Key="Software\ADMigrationSuite" 
+                       Name="installed" 
+                       Type="integer" 
+                       Value="1" 
+                       KeyPath="yes" />
+      </Component>
+      
+      <Component Id="DesktopShortcut" Directory="DesktopFolder" Guid="*">
+        <Shortcut Id="ApplicationDesktopShortcut"
+                  Name="AD Migration Suite"
+                  Description="Enterprise Active Directory Migration Tool"
+                  Target="[MANAGER_DIR]MigracaoAD.UI.exe"
+                  WorkingDirectory="MANAGER_DIR"
+                  Icon="AppIcon.exe" />
+        <RemoveFolder Id="CleanUpDesktopShortcut" Directory="DesktopFolder" On="uninstall" />
+        <RegistryValue Root="HKCU" 
+                       Key="Software\ADMigrationSuite" 
+                       Name="desktop_shortcut" 
+                       Type="integer" 
+                       Value="1" 
+                       KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- Agent Components -->
+    <ComponentGroup Id="AgentComponents" Directory="AGENT_DIR">
+      <Component Id="AgentExe" Guid="*">
+        <File Id="MigracaoAD.Agent.exe" 
+              Source="..\agent\publish\MigracaoAD.Agent.exe" 
+              KeyPath="yes" />
+        <Environment Id="AGENT_TOKEN_ENV" 
+                     Name="AGENT_TOKEN" 
+                     Value="[AGENT_TOKEN]" 
+                     Permanent="no" 
+                     Part="all" 
+                     Action="set" 
+                     System="yes" />
+      </Component>
+      <Component Id="AgentInstallScript" Guid="*">
+        <File Id="install_agent.ps1" 
+              Source="..\agent\install-agent.ps1" 
+              KeyPath="yes" />
+      </Component>
+      <Component Id="AgentUninstallScript" Guid="*">
+        <File Id="uninstall_agent.ps1" 
+              Source="..\agent\uninstall-agent.ps1" 
+              KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- Documentation Components -->
+    <ComponentGroup Id="DocumentationComponents" Directory="DOCS_DIR">
+      <Component Id="ReadmeDoc" Guid="*">
+        <File Id="README.md" Source="..\README.md" KeyPath="yes" />
+      </Component>
+      <Component Id="ChangelogDoc" Guid="*">
+        <File Id="CHANGELOG.md" Source="..\CHANGELOG.md" KeyPath="yes" />
+      </Component>
+      <Component Id="AgentGuideDoc" Guid="*">
+        <File Id="README_AGENTE.md" Source="..\README_AGENTE.md" KeyPath="yes" />
+      </Component>
+      <Component Id="HowItWorksDoc" Guid="*">
+        <File Id="COMO_FUNCIONA_AGENTE.md" Source="..\COMO_FUNCIONA_AGENTE.md" KeyPath="yes" />
+      </Component>
+      <Component Id="InstallGuideDoc" Guid="*">
+        <File Id="INSTALACAO_RAPIDA.md" Source="..\agent\INSTALACAO_RAPIDA.md" KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- Icon -->
+    <Icon Id="AppIcon.exe" SourceFile="..\ui-wpf\bin\Release\net8.0-windows\MigracaoAD.UI.exe" />
+    <Property Id="ARPPRODUCTICON" Value="AppIcon.exe" />
+    
+    <!-- Add/Remove Programs -->
+    <Property Id="ARPHELPLINK" Value="https://admigration.example.com/support" />
+    <Property Id="ARPURLINFOABOUT" Value="https://admigration.example.com" />
+    <Property Id="ARPURLUPDATEINFO" Value="https://admigration.example.com/updates" />
+    <Property Id="ARPNOREPAIR" Value="yes" Secure="yes" />
+  </Product>
+</Wix>
+

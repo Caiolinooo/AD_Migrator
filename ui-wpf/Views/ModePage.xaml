@@ -1,0 +1,15 @@
+<Page x:Class="MigracaoAD.UI.Views.ModePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <StackPanel Margin="12">
+    <TextBlock Text="Modo de Migração" FontSize="20" FontWeight="Bold"/>
+    <TextBlock Text="Escolha a estratégia: mesmo domínio (Opção A) ou novo domínio (Opção B)."/>
+    <StackPanel Orientation="Vertical" Margin="0,8,0,0">
+      <CheckBox Content="Opção A — Mesmo domínio (novo DC na nuvem)" IsChecked="{Binding ModeOptionA, Mode=TwoWay}"/>
+      <TextBlock TextWrapping="Wrap" Text="Requer conectividade contínua entre DCs (recomendado usar túnel)."/>
+      <CheckBox Content="Opção B — Novo domínio/forest (ADMT + SIDHistory)" IsChecked="{Binding ModeOptionB, Mode=TwoWay}"/>
+      <TextBlock TextWrapping="Wrap" Text="Não exige conectividade permanente após migração; usa trust + ADMT durante as ondas."/>
+    </StackPanel>
+  </StackPanel>
+</Page>
+

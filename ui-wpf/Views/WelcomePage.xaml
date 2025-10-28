@@ -1,0 +1,15 @@
+<Page x:Class="MigracaoAD.UI.Views.WelcomePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <StackPanel Margin="12">
+    <TextBlock Text="Bem-vindo" FontSize="24" FontWeight="Bold"/>
+    <TextBlock Text="Assistente de migração Active Directory e Shares."/>
+    <Border Padding="12" Background="#1fffffff" CornerRadius="6">
+      <TextBlock TextWrapping="Wrap">
+        Este assistente guia toda a migração com validações, explicações e opções seguras.
+        Nada é executado sem sua confirmação. Você poderá simular (dry-run) cada etapa.
+      </TextBlock>
+    </Border>
+  </StackPanel>
+</Page>
+

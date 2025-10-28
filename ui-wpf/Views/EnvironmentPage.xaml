@@ -1,0 +1,226 @@
+<Page x:Class="MigracaoAD.UI.Views.EnvironmentPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <ScrollViewer>
+    <StackPanel Margin="0">
+      <TextBlock Text="Ambiente &amp; Configuração" FontSize="24" FontWeight="Bold" Margin="0,0,0,8"/>
+      <TextBlock Text="Configure os servidores usando o sistema de agentes (recomendado) ou credenciais tradicionais."
+                 Foreground="{DynamicResource TextSecondary}" Margin="0,0,0,24"/>
+
+      <!-- Configuração do Agente (PRIORIDADE) -->
+      <Border Style="{StaticResource Card}" Background="#1E3A8A" BorderBrush="#3B82F6" BorderThickness="2">
+        <StackPanel>
+          <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+            <TextBlock Text="🤖" FontSize="24" Margin="0,0,8,0"/>
+            <TextBlock Text="Sistema de Agentes (Recomendado)" FontSize="18" FontWeight="Bold" Foreground="White"/>
+          </StackPanel>
+
+          <TextBlock TextWrapping="Wrap" Foreground="#93C5FD" Margin="0,0,0,16" FontSize="13">
+            ✅ Mais simples: Só precisa de IP + Token (sem usuário/senha!)
+            <LineBreak/>
+            ✅ Mais rápido: Conexão direta HTTP (sem WinRM/Kerberos)
+            <LineBreak/>
+            ✅ Mais confiável: Funciona entre domínios diferentes
+            <LineBreak/>
+            ✅ Mais seguro: Token único, firewall automático
+          </TextBlock>
+
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="16"/>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="16"/>
+              <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0">
+              <Label Content="Token de autenticação" Foreground="White"/>
+              <TextBox Text="{Binding AgentToken, Mode=TwoWay}"
+                       ToolTip="Token usado para autenticar com os agentes (mesmo token em ambos os servidores)"
+                       FontWeight="Bold"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="2">
+              <Label Content="Porta do agente" Foreground="White"/>
+              <TextBox Text="{Binding AgentPort, Mode=TwoWay}"
+                       ToolTip="Porta onde o agente está escutando (padrão: 8765)"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="4" VerticalAlignment="Bottom">
+              <Button Content="📖 Guia de Instalação" Click="ShowAgentGuide_Click"
+                      Background="#3B82F6" Foreground="White" MinWidth="150"
+                      ToolTip="Como instalar o agente nos servidores"/>
+            </StackPanel>
+          </Grid>
+
+          <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+            <Button Content="🔌 Testar Origem" Click="TestAgentSource_Click" MinWidth="150"
+                    Background="#10B981" Foreground="White" FontWeight="Bold"
+                    ToolTip="Testa se o agente está respondendo no servidor origem"/>
+            <Button Content="🔌 Testar Destino" Click="TestAgentTarget_Click" MinWidth="150"
+                    Background="#10B981" Foreground="White" FontWeight="Bold"
+                    ToolTip="Testa se o agente está respondendo no servidor destino"/>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+
+      <!-- Informações dos Servidores -->
+      <Border Style="{StaticResource Card}">
+        <StackPanel>
+          <TextBlock Text="📋 Informações dos Servidores" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,16"/>
+
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="16"/>
+              <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Coluna Origem -->
+            <StackPanel Grid.Column="0">
+              <TextBlock Text="🖥️ Servidor Origem (Local)" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,12" Foreground="{DynamicResource Accent}"/>
+
+              <Label Content="Domínio origem"/>
+              <TextBox Text="{Binding SourceDomainName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                       ToolTip="Ex.: abzservicos.local"/>
+
+              <Label Content="DC origem (hostname/IP)"/>
+              <TextBox Text="{Binding SourceDcHost, Mode=TwoWay}"/>
+
+              <Label Content="IP DC origem" FontWeight="Bold"/>
+              <TextBox Text="{Binding SourceDcIp, Mode=TwoWay}"
+                       ToolTip="IP do servidor origem (necessário para o agente)"
+                       Background="#FEF3C7" BorderBrush="#F59E0B" BorderThickness="2"/>
+
+              <Label Content="FileServer origem"/>
+              <TextBox Text="{Binding SourceFileServer, Mode=TwoWay}"/>
+            </StackPanel>
+
+            <!-- Coluna Destino -->
+            <StackPanel Grid.Column="2">
+              <TextBlock Text="☁️ Servidor Destino (Nuvem)" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,12" Foreground="{DynamicResource Accent}"/>
+
+              <Label Content="Domínio destino"/>
+              <TextBox Text="{Binding TargetDomainName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                       ToolTip="Ex.: corp.local"/>
+
+              <Label Content="DC destino (hostname/IP)"/>
+              <TextBox Text="{Binding TargetDcHost, Mode=TwoWay}"/>
+
+              <Label Content="IP DC destino" FontWeight="Bold"/>
+              <TextBox Text="{Binding TargetDcIp, Mode=TwoWay}"
+                       ToolTip="IP do servidor destino (necessário para o agente)"
+                       Background="#FEF3C7" BorderBrush="#F59E0B" BorderThickness="2"/>
+
+              <Label Content="FileServer destino"/>
+              <TextBox Text="{Binding DestinationFileServer, Mode=TwoWay}"/>
+            </StackPanel>
+          </Grid>
+        </StackPanel>
+      </Border>
+
+      <!-- Botões de Ação -->
+      <Border Style="{StaticResource Card}">
+        <StackPanel>
+          <TextBlock Text="🛠️ Ações Rápidas" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,12"/>
+
+          <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+            <Button x:Name="AutoDetectBtn" Content="🔍 Auto-Detectar" Click="AutoDetect_Click" MinWidth="150"
+                    ToolTip="Detecta automaticamente o domínio e DC atual"/>
+            <Button Content="🌐 Escanear Rede" Click="ScanNetwork_Click" MinWidth="150"
+                    ToolTip="Escaneia a rede local em busca de servidores"/>
+          </StackPanel>
+
+          <Separator Margin="0,8,0,8"/>
+          <TextBlock Text="⚙️ Configuração Automática via Agente" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,8"/>
+          <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextSecondary}" Margin="0,0,0,8" FontSize="11">
+            Configura automaticamente: IP estático, DNS, firewall, roles (AD DS, DFS, File Server) e discos.
+          </TextBlock>
+
+          <StackPanel Orientation="Horizontal">
+            <Button x:Name="ConfigureSourceBtn" Content="⚙️ Configurar Servidor Origem" Click="ConfigureSource_Click"
+                    MinWidth="200" Background="#10B981" Foreground="White" FontWeight="Bold"/>
+            <Button x:Name="ConfigureTargetBtn" Content="⚙️ Configurar Servidor Destino" Click="ConfigureTarget_Click"
+                    MinWidth="200" Background="#10B981" Foreground="White" FontWeight="Bold"/>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+
+      <!-- IPs Detectados com Botões de Copiar -->
+      <Border x:Name="DetectedIPsPanel" Style="{StaticResource Card}" Background="{DynamicResource SelectedBg}" Visibility="Collapsed">
+        <StackPanel>
+          <TextBlock Text="📋 IPs Detectados - Clique para Copiar" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,12"/>
+          <StackPanel x:Name="DetectedIPsList" Orientation="Vertical"/>
+        </StackPanel>
+      </Border>
+
+      <!-- Credenciais Tradicionais (Fallback) -->
+      <Border Style="{StaticResource Card}" Background="#422006" BorderBrush="#78350F" BorderThickness="1">
+        <StackPanel>
+          <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+            <TextBlock Text="⚠️" FontSize="18" Margin="0,0,8,0"/>
+            <TextBlock Text="Credenciais Tradicionais (Fallback - Não Recomendado)" FontSize="14" FontWeight="SemiBold" Foreground="#FCD34D"/>
+          </StackPanel>
+
+          <TextBlock TextWrapping="Wrap" Foreground="#FDE68A" Margin="0,0,0,12" FontSize="11">
+            Use apenas se o agente não estiver disponível. Requer configuração complexa de WinRM/SSH/PSExec.
+          </TextBlock>
+
+          <Expander Header="Mostrar Campos de Credenciais" Foreground="#FCD34D">
+            <Grid Margin="0,12,0,0">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="16"/>
+                <ColumnDefinition Width="*"/>
+              </Grid.ColumnDefinitions>
+
+              <!-- Credenciais Origem -->
+              <StackPanel Grid.Column="0">
+                <TextBlock Text="🔐 Origem" FontWeight="SemiBold" Margin="0,0,0,8" Foreground="#FCD34D"/>
+
+                <Label Content="Usuário" Foreground="#FDE68A"/>
+                <TextBox Text="{Binding SourceUsername, Mode=TwoWay}"/>
+
+                <Label Content="Senha" Foreground="#FDE68A"/>
+                <PasswordBox x:Name="SourcePasswordBox" PasswordChanged="SourcePassword_Changed"/>
+
+                <Label Content="Método" Foreground="#FDE68A"/>
+                <ComboBox x:Name="SourceConnectionMethod" SelectedIndex="0">
+                  <ComboBoxItem Content="WinRM"/>
+                  <ComboBoxItem Content="SSH"/>
+                  <ComboBoxItem Content="PSExec"/>
+                </ComboBox>
+              </StackPanel>
+
+              <!-- Credenciais Destino -->
+              <StackPanel Grid.Column="2">
+                <TextBlock Text="🔐 Destino" FontWeight="SemiBold" Margin="0,0,0,8" Foreground="#FCD34D"/>
+
+                <Label Content="Usuário" Foreground="#FDE68A"/>
+                <TextBox Text="{Binding TargetUsername, Mode=TwoWay}"/>
+
+                <Label Content="Senha" Foreground="#FDE68A"/>
+                <PasswordBox x:Name="TargetPasswordBox" PasswordChanged="TargetPassword_Changed"/>
+
+                <Label Content="Método" Foreground="#FDE68A"/>
+                <ComboBox x:Name="TargetConnectionMethod" SelectedIndex="0">
+                  <ComboBoxItem Content="WinRM"/>
+                  <ComboBoxItem Content="SSH"/>
+                  <ComboBoxItem Content="PSExec"/>
+                </ComboBox>
+              </StackPanel>
+            </Grid>
+          </Expander>
+        </StackPanel>
+      </Border>
+
+      <Border Style="{StaticResource Card}" Background="{DynamicResource AppBg}">
+        <TextBlock x:Name="DetectOut" TextWrapping="Wrap" FontFamily="Consolas" FontSize="12"/>
+      </Border>
+
+
+    </StackPanel>
+  </ScrollViewer>
+</Page>
+

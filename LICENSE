@@ -1,0 +1,157 @@
+COMMERCIAL SOFTWARE LICENSE AGREEMENT
+
+AD Migration Suite
+Version 1.0.0
+
+Copyright © 2025 AD Migration Suite Team. All rights reserved.
+
+IMPORTANT - READ CAREFULLY: This Commercial Software License Agreement ("Agreement") is a legal agreement between you (either an individual or a single entity, "Licensee") and AD Migration Suite Team ("Licensor") for the AD Migration Suite software product, which includes computer software and may include associated media, printed materials, and online or electronic documentation ("Software").
+
+BY INSTALLING, COPYING, OR OTHERWISE USING THE SOFTWARE, YOU AGREE TO BE BOUND BY THE TERMS OF THIS AGREEMENT. IF YOU DO NOT AGREE TO THE TERMS OF THIS AGREEMENT, DO NOT INSTALL OR USE THE SOFTWARE.
+
+1. GRANT OF LICENSE
+
+Subject to the terms and conditions of this Agreement and payment of applicable license fees, Licensor grants Licensee a non-exclusive, non-transferable license to:
+
+a) Install and use the Software on servers and workstations within Licensee's organization
+b) Make copies of the Software for backup and archival purposes
+c) Use the Software for internal business purposes only
+
+2. LICENSE TYPES AND RESTRICTIONS
+
+2.1 ENTERPRISE LICENSE ($4,999 one-time)
+- Perpetual license for unlimited servers within one organization
+- Includes 1 year of updates and support
+- Management Console: Unlimited installations
+- Agent Service: Unlimited server installations
+- No redistribution rights
+
+2.2 ENTERPRISE PLUS LICENSE ($9,999/year)
+- All Enterprise License features
+- Priority support (24/7)
+- Dedicated account manager
+- Custom feature development
+- Training and onboarding
+- Unlimited updates and support
+
+3. RESTRICTIONS
+
+Licensee shall NOT:
+
+a) Modify, reverse engineer, decompile, or disassemble the Software
+b) Rent, lease, lend, sell, redistribute, or sublicense the Software
+c) Remove or alter any proprietary notices or labels on the Software
+d) Use the Software to provide services to third parties
+e) Distribute the Software as part of a competitive product
+f) Use the Software for any illegal purpose
+g) Share license keys or authentication tokens with unauthorized parties
+
+4. INTELLECTUAL PROPERTY RIGHTS
+
+The Software is licensed, not sold. Licensor retains all right, title, and interest in and to the Software, including all intellectual property rights. This Agreement does not grant Licensee any rights to trademarks or service marks of Licensor.
+
+5. SUPPORT AND UPDATES
+
+5.1 Enterprise License includes:
+- Email support (business hours)
+- Bug fixes and security updates for 1 year
+- Access to documentation and knowledge base
+
+5.2 Enterprise Plus License includes:
+- 24/7 priority support
+- Unlimited updates
+- Custom feature requests
+- Training and onboarding
+
+5.3 After the initial support period, Licensee may renew support at the then-current rates.
+
+6. WARRANTY DISCLAIMER
+
+THE SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND. LICENSOR DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
+
+LICENSOR DOES NOT WARRANT THAT THE SOFTWARE WILL MEET LICENSEE'S REQUIREMENTS OR THAT THE OPERATION OF THE SOFTWARE WILL BE UNINTERRUPTED OR ERROR-FREE.
+
+7. LIMITATION OF LIABILITY
+
+IN NO EVENT SHALL LICENSOR BE LIABLE FOR ANY SPECIAL, INCIDENTAL, INDIRECT, OR CONSEQUENTIAL DAMAGES WHATSOEVER (INCLUDING, WITHOUT LIMITATION, DAMAGES FOR LOSS OF BUSINESS PROFITS, BUSINESS INTERRUPTION, LOSS OF BUSINESS INFORMATION, OR ANY OTHER PECUNIARY LOSS) ARISING OUT OF THE USE OF OR INABILITY TO USE THE SOFTWARE, EVEN IF LICENSOR HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+
+LICENSOR'S TOTAL LIABILITY UNDER THIS AGREEMENT SHALL NOT EXCEED THE AMOUNT PAID BY LICENSEE FOR THE SOFTWARE LICENSE.
+
+8. TERMINATION
+
+This Agreement is effective until terminated. Licensee's rights under this Agreement will terminate automatically without notice if Licensee fails to comply with any term of this Agreement.
+
+Upon termination, Licensee must:
+a) Cease all use of the Software
+b) Destroy all copies of the Software
+c) Certify in writing to Licensor that all copies have been destroyed
+
+9. CONFIDENTIALITY
+
+Licensee acknowledges that the Software contains proprietary and confidential information of Licensor. Licensee agrees to maintain the confidentiality of the Software and not to disclose it to any third party without prior written consent of Licensor.
+
+10. AUDIT RIGHTS
+
+Licensor reserves the right to audit Licensee's use of the Software to ensure compliance with this Agreement. Licensee agrees to cooperate with such audits and provide reasonable access to relevant records and systems.
+
+11. EXPORT RESTRICTIONS
+
+Licensee acknowledges that the Software may be subject to export restrictions. Licensee agrees to comply with all applicable international and national laws that apply to the Software, including export control regulations.
+
+12. GOVERNING LAW
+
+This Agreement shall be governed by and construed in accordance with the laws of [Your Jurisdiction], without regard to its conflict of law provisions.
+
+13. ENTIRE AGREEMENT
+
+This Agreement constitutes the entire agreement between the parties concerning the subject matter hereof and supersedes all prior or contemporaneous oral or written agreements concerning such subject matter.
+
+14. AMENDMENTS
+
+Licensor reserves the right to modify this Agreement at any time. Continued use of the Software after such modifications constitutes acceptance of the modified Agreement.
+
+15. SEVERABILITY
+
+If any provision of this Agreement is held to be unenforceable, such provision shall be reformed only to the extent necessary to make it enforceable, and the remaining provisions shall remain in full force and effect.
+
+16. NO WAIVER
+
+The failure of either party to enforce any right or provision of this Agreement shall not constitute a waiver of such right or provision.
+
+17. CONTACT INFORMATION
+
+For questions about this Agreement or to purchase a license, contact:
+
+AD Migration Suite Team
+Email: sales@admigration.example.com
+Website: https://admigration.example.com
+Support: support@admigration.example.com
+
+18. ACKNOWLEDGMENT
+
+BY INSTALLING OR USING THE SOFTWARE, LICENSEE ACKNOWLEDGES THAT LICENSEE HAS READ THIS AGREEMENT, UNDERSTANDS IT, AND AGREES TO BE BOUND BY ITS TERMS AND CONDITIONS.
+
+---
+
+THIRD-PARTY COMPONENTS
+
+The Software may include third-party components subject to separate license terms:
+
+- .NET Runtime: MIT License (https://github.com/dotnet/runtime/blob/main/LICENSE.TXT)
+- ASP.NET Core: MIT License (https://github.com/dotnet/aspnetcore/blob/main/LICENSE.txt)
+- Windows Presentation Foundation: MIT License
+
+These components are used in accordance with their respective licenses.
+
+---
+
+PRIVACY POLICY
+
+The Software does not collect or transmit any personal data or usage statistics. All operations are performed locally within Licensee's infrastructure. Authentication tokens are stored locally and never transmitted to Licensor.
+
+---
+
+END OF LICENSE AGREEMENT
+
+Copyright © 2025 AD Migration Suite Team. All rights reserved.
+
