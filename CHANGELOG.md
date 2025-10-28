@@ -5,6 +5,30 @@ All notable changes to AD Migration Suite will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2025-10-28
+
+### 🐛 Fixed
+
+- **Windows Server 2012 R2 Compatibility**: Replaced `Test-NetConnection` with `Test-Connection` and `System.Net.Sockets.TcpClient` for port testing
+  - Fixed agent connectivity tests on older Windows Server versions
+  - Updated `AgentController.cs` to use compatible PowerShell commands
+  - Updated `PowershellService.cs` to use TcpClient for port scanning
+
+### 📚 Added
+
+- **TROUBLESHOOTING.md**: Comprehensive troubleshooting guide with:
+  - 10 common problems and solutions
+  - PowerShell diagnostic commands
+  - Installation checklist
+  - Support information
+
+### 🔧 Changed
+
+- Agent version updated to 1.0.1
+- Installer package updated to 1.0.1
+
+---
+
 ## [1.0.0] - 2025-01-28
 
 ### Added
