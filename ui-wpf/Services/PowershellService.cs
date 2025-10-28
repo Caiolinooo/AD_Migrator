@@ -15,8 +15,18 @@ $ErrorActionPreference='SilentlyContinue'
 $ports = 135,445,389,636,88,464,53,3268,3269,5985,5986
 $tests = @()
 foreach($p in $ports){
-  try{ $r = Test-NetConnection -ComputerName $ip -Port $p -WarningAction SilentlyContinue
-       $tests += [PSCustomObject]@{Port=$p;Reachable=[bool]$r.TcpTestSucceeded} }
+  try{
+    $tcpClient = New-Object System.Net.Sockets.TcpClient
+    $connect = $tcpClient.BeginConnect($ip, $p, $null, $null)
+    $wait = $connect.AsyncWaitHandle.WaitOne(1000, $false)
+    if ($wait) {
+      $tcpClient.EndConnect($connect)
+      $tests += [PSCustomObject]@{Port=$p;Reachable=$true}
+    } else {
+      $tests += [PSCustomObject]@{Port=$p;Reachable=$false}
+    }
+    $tcpClient.Close()
+  }
   catch{ $tests += [PSCustomObject]@{Port=$p;Reachable=$false} }
 }
 $os = $null

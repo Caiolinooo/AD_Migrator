@@ -154,7 +154,40 @@ public class AgentController : ControllerBase
     [HttpPost("network/test")]
     public async Task<IActionResult> TestConnection([FromBody] TestConnectionRequest request)
     {
-        var cmd = $"Test-NetConnection -ComputerName {request.Target} -Port {request.Port}";
+        // Usar Test-Connection (compatível com Server 2012 R2+) em vez de Test-NetConnection
+        var cmd = $@"
+$target = '{request.Target}'
+$port = {request.Port}
+$result = @{{}}
+
+# Testar ping
+try {{
+    $ping = Test-Connection -ComputerName $target -Count 1 -Quiet -ErrorAction Stop
+    $result['PingSucceeded'] = $ping
+}} catch {{
+    $result['PingSucceeded'] = $false
+}}
+
+# Testar porta TCP
+try {{
+    $tcpClient = New-Object System.Net.Sockets.TcpClient
+    $connect = $tcpClient.BeginConnect($target, $port, $null, $null)
+    $wait = $connect.AsyncWaitHandle.WaitOne(3000, $false)
+    if ($wait) {{
+        $tcpClient.EndConnect($connect)
+        $result['TcpTestSucceeded'] = $true
+    }} else {{
+        $result['TcpTestSucceeded'] = $false
+    }}
+    $tcpClient.Close()
+}} catch {{
+    $result['TcpTestSucceeded'] = $false
+}}
+
+$result['ComputerName'] = $target
+$result['RemotePort'] = $port
+$result | ConvertTo-Json
+";
         var result = await _agentService.ExecuteCommandAsync(cmd);
         return Ok(result);
     }
